@@ -7,6 +7,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 import { useState } from 'react';
 
+import logo from '../../assets/images/taugorLogo.png';
+
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
@@ -33,20 +35,38 @@ export default function ResponsiveAppBar() {
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
+        <Toolbar
+          disableGutters
+          sx={{
+            justifyContent: {
+              xs: 'space-between',
+              md: 'unset',
+            },
+          }}
+        >
+          <Box
+            sx={{
+              display: { xs: 'none', md: 'block' },
+              height: 1,
+              width: 1,
+              maxHeight: { md: 200 },
+              maxWidth: { md: 200 },
+            }}
           >
-            LOGO
-          </Typography>
-
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            <Box
+              component="img"
+              sx={{
+                height: 1,
+                width: 1,
+              }}
+              alt="logo"
+              src={logo}
+            />
+          </Box>
+          <Box sx={{ flexGrow: { xs: 0, md: 1 }, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
-              aria-label="account of current user"
+              aria-label="conta do usuário atual"
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
@@ -79,14 +99,25 @@ export default function ResponsiveAppBar() {
               ))}
             </Menu>
           </Box>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
+          <Box
+            sx={{
+              display: { xs: 'flex', md: 'none' },
+              height: 1,
+              width: 1,
+              maxHeight: { xs: 200 },
+              maxWidth: { xs: 200 },
+            }}
           >
-            LOGO
-          </Typography>
+            <Box
+              component="img"
+              sx={{
+                height: 1,
+                width: 1,
+              }}
+              alt="logo"
+              src={logo}
+            />
+          </Box>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
