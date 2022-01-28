@@ -13,7 +13,6 @@ export default function Routes() {
 
   useEffect(() => {
     const storeUserState = localStorage.getItem('user');
-    console.log(storeUserState);
     if (storeUserState) {
       JSON.parse(storeUserState);
       setUser(true);
