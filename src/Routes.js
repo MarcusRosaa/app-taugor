@@ -1,55 +1,35 @@
 import {
-  Routes as Switch, Route, Navigate,
+  Routes as Switch, Route,
 } from 'react-router-dom';
-
-import { useEffect, useState } from 'react';
 
 import Auth from './pages/Auth';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
+import { AuthProvider } from './contexts/AuthContext';
+import PrivateRoute from './components/PrivateRoute';
 
 export default function Routes() {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const storeUserState = localStorage.getItem('user');
-    if (storeUserState) {
-      JSON.parse(storeUserState);
-      setUser(true);
-      setUser(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('user', user);
-  }, [user]);
-
   return (
-    <Switch>
-      {!user && (
+    <AuthProvider>
+      <Switch>
         <Route
-          path="/auth"
-          element={<Auth handleAuthenticate={() => setUser(true)} />}
+          exact
+          path="/"
+          element={<PrivateRoute><Dashboard /></PrivateRoute>}
         />
-      )}
-      {user && (
-        <>
-          <Route
-            path="/profile"
-            element={<Profile handleLogout={() => setUser(false)} />}
-          />
-          <Route
-            exact
-            path="/dashboard"
-            element={<Dashboard />}
-          />
-        </>
-      )}
-
-      <Route
-        path="*"
-        element={<Navigate to={user ? '/profile' : '/auth'} />}
-      />
-    </Switch>
+        <Route
+          path="/signup"
+          element={<Auth route="signup" />}
+        />
+        <Route
+          path="/login"
+          element={<Auth route="login" />}
+        />
+        <Route
+          path="/profile"
+          element={<Profile />}
+        />
+      </Switch>
+    </AuthProvider>
   );
 }

@@ -1,17 +1,15 @@
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
-export default function Auth({ handleAuthenticate }) {
-  const navigate = useNavigate();
+import PropTypes from 'prop-types';
+import Login from '../../components/Login';
+import SignUp from '../../components/Signup';
 
-  const handleLogin = () => {
-    handleAuthenticate();
-    navigate('profile');
-  };
-
+export default function Auth({ route }) {
   return (
-    <div>
-      <h2>Por favor autentique-se para continuar</h2>
-      <button type="button" onClick={handleLogin}>Autenticar</button>
-    </div>
+    route === 'signup' ? <SignUp /> : <Login />
   );
 }
+
+Auth.propTypes = {
+  route: PropTypes.string.isRequired,
+};

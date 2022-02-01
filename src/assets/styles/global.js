@@ -16,4 +16,13 @@ export default createGlobalStyle`
   button {
     cursor: pointer;
   }
+
+  a:visited{
+    color: #1565c0 !important;
+  }
+
+  button a {
+    text-decoration: none;
+    color: #1565c0;
+  }
 `;

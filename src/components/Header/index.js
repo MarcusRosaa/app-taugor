@@ -3,18 +3,23 @@ import {
   Container, Avatar, Button, Tooltip, MenuItem,
 } from '@mui/material';
 
+import { Link } from 'react-router-dom';
+
 import MenuIcon from '@mui/icons-material/Menu';
 
 import { useState } from 'react';
 
+// import { useAuth } from '../../contexts/AuthContext';
+
 import logo from '../../assets/images/taugorLogo.png';
 
 const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['perfil', 'dashboard'];
 
-export default function ResponsiveAppBar() {
+export default function Header() {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  // const { currentUser } = useAuth();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -31,6 +36,10 @@ export default function ResponsiveAppBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  function handleLogout() {
+
+  }
 
   return (
     <AppBar position="static">
@@ -89,7 +98,7 @@ export default function ResponsiveAppBar() {
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: 'block', md: 'none' },
+                display: { xs: 'flex', md: 'none' },
               }}
             >
               {pages.map((page) => (
@@ -153,10 +162,38 @@ export default function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                <MenuItem
+                  style={{ justifyContent: 'center' }}
+                  key={setting}
+                  onClick={handleCloseUserMenu}
+                >
+                  <Typography textTransform="capitalize" textAlign="center">
+                    <Link
+                      style={{ textDecoration: 'none' }}
+                      to={setting === 'perfil' ? '/profile' : '/'}
+                    >
+                      {setting}
+                    </Link>
+                  </Typography>
                 </MenuItem>
               ))}
+              <MenuItem
+                style={{ justifyContent: 'center' }}
+                onClick={handleCloseUserMenu}
+              >
+                <Button
+                  sx={{
+                    color: '#1565c0',
+                    fontSize: '16px',
+                    textTransform: 'capitalize',
+                    padding: '0',
+                  }}
+                  variant="text"
+                  onClick={handleLogout}
+                >
+                  Sair
+                </Button>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>

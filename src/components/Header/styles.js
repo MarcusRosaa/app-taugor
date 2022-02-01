@@ -1,7 +1,10 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
+import MuiMenuItem from '@material-ui/core/MenuItem';
 
-export const useStyles = makeStyles({
-  headerImage: {
-
-  },
+export const menuTheme = ({
+  MenuItem: withStyles({
+    root: {
+      justifyContent: 'center',
+    },
+  })(MuiMenuItem),
 });
