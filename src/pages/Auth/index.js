@@ -1,5 +1,3 @@
-// import { useNavigate } from 'react-router-dom';
-
 import PropTypes from 'prop-types';
 import Login from '../../components/Login';
 import SignUp from '../../components/Signup';

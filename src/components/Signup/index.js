@@ -5,7 +5,7 @@ import {
   Box, CssBaseline, TextField, Alert,
 } from '@mui/material';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
@@ -26,7 +26,9 @@ export default function Signup() {
   const { signup } = useAuth();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const history = useNavigate;
+  const history = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/';
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -38,7 +40,7 @@ export default function Signup() {
       setError('');
       setLoading(true);
       await signup(emailRef.current.value, passwordRef.current.value);
-      history('/');
+      history(from, { replace: true });
     } catch {
       setError('Falha ao criar conta');
     }
@@ -65,7 +67,7 @@ export default function Signup() {
             Crie sua conta
           </Typography>
           {error && (
-          <Alert variant="outlined" severity="error" sx={{ width: 1, justifyContent: 'center' }}>
+          <Alert variant="outlined" severity="error" sx={{ width: 1, justifyContent: 'center', mt: '16px' }}>
             {' '}
             {error}
             {' '}

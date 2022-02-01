@@ -11,10 +11,10 @@ import { useAuth } from '../../contexts/AuthContext';
 export default function Profile() {
   const [error, setError] = useState('');
   const { currentUser, logout } = useAuth();
+  const history = useNavigate();
 
   async function handleLogout() {
     setError('');
-    const history = useNavigate();
     try {
       await logout();
       history('/login');

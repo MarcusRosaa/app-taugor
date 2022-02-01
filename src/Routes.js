@@ -7,16 +7,13 @@ import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import { AuthProvider } from './contexts/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
+import ForgotPassword from './pages/ForgotPassword';
+import UpdateProfile from './pages/UpdateProfile';
 
 export default function Routes() {
   return (
     <AuthProvider>
       <Switch>
-        <Route
-          exact
-          path="/"
-          element={<PrivateRoute><Dashboard /></PrivateRoute>}
-        />
         <Route
           path="/signup"
           element={<Auth route="signup" />}
@@ -26,8 +23,21 @@ export default function Routes() {
           element={<Auth route="login" />}
         />
         <Route
+          path="/forgot-password"
+          element={<ForgotPassword />}
+        />
+        <Route
+          exact
+          path="/"
+          element={<PrivateRoute><Dashboard /></PrivateRoute>}
+        />
+        <Route
           path="/profile"
-          element={<Profile />}
+          element={<PrivateRoute><Profile /></PrivateRoute>}
+        />
+        <Route
+          path="/update-profile"
+          element={<PrivateRoute><UpdateProfile /></PrivateRoute>}
         />
       </Switch>
     </AuthProvider>

@@ -5,7 +5,7 @@ import {
   Box, CssBaseline, TextField, Alert,
 } from '@mui/material';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
@@ -24,6 +24,8 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const history = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/';
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -32,7 +34,8 @@ export default function Login() {
       setError('');
       setLoading(true);
       await login(emailRef.current.value, passwordRef.current.value);
-      history('/');
+
+      history(from, { replace: true });
     } catch {
       setError('Falha ao logar na conta');
     }
@@ -60,7 +63,7 @@ export default function Login() {
           </Typography>
 
           {error && (
-          <Alert variant="outlined" severity="error" sx={{ width: 1, justifyContent: 'center' }}>
+          <Alert variant="outlined" severity="error" sx={{ width: 1, justifyContent: 'center', mt: '16px' }}>
             {' '}
             {error}
             {' '}
@@ -103,14 +106,19 @@ export default function Login() {
             >
               Logar na conta
             </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link to="/signup" variant="body2">
-                  Não possui uma conta? Crie uma aqui
-                </Link>
-              </Grid>
-            </Grid>
           </Box>
+          <Grid container alignItems="flex-end" flexDirection="column">
+            <Grid item sx={{ mb: '8px' }}>
+              <Link to="/forgot-password" variant="body2">
+                Esqueceu sua senha?
+              </Link>
+            </Grid>
+            <Grid item>
+              <Link to="/signup" variant="body2">
+                Não possui uma conta? Crie uma aqui
+              </Link>
+            </Grid>
+          </Grid>
         </Box>
         <Copyright sx={{ mt: 5 }} />
       </Container>
