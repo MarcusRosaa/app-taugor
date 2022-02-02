@@ -54,7 +54,7 @@ export function AuthProvider({ children }) {
     });
 
     return unsubscribe;
-  }, []);
+  }, [currentUser]);
 
   const value = useMemo(() => ({
     currentUser,
@@ -64,7 +64,7 @@ export function AuthProvider({ children }) {
     resetPassword,
     updateEmailInfo,
     updatePasswordInfo,
-  }), [currentUser, login, signup, logout, resetPassword, updateEmailInfo, updatePasswordInfo]);
+  }), [currentUser]);
 
   return (
     <AuthContext.Provider value={value}>

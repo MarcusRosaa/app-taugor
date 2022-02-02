@@ -2,25 +2,32 @@ import {
   Routes as Switch, Route,
 } from 'react-router-dom';
 
-import Auth from './pages/Auth';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
-import { AuthProvider } from './contexts/AuthContext';
-import PrivateRoute from './components/PrivateRoute';
 import ForgotPassword from './pages/ForgotPassword';
 import UpdateProfile from './pages/UpdateProfile';
+
+import { AuthProvider } from './contexts/AuthContext';
+
+import PrivateRoute from './components/PrivateRoute';
 
 export default function Routes() {
   return (
     <AuthProvider>
       <Switch>
         <Route
-          path="/signup"
-          element={<Auth route="signup" />}
+          path="*"
+          element={<Login />}
         />
         <Route
           path="/login"
-          element={<Auth route="login" />}
+          element={<Login />}
+        />
+        <Route
+          path="/signup"
+          element={<Signup route="login" />}
         />
         <Route
           path="/forgot-password"

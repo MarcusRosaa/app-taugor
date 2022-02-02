@@ -9,8 +9,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 import { useState } from 'react';
 
-// import { useAuth } from '../../contexts/AuthContext';
-
 import logo from '../../assets/images/taugorLogo.png';
 
 const pages = ['Products', 'Pricing', 'Blog'];
@@ -19,7 +17,6 @@ const settings = ['perfil', 'dashboard'];
 export default function Header() {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  // const { currentUser } = useAuth();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -163,13 +160,13 @@ export default function Header() {
             >
               {settings.map((setting) => (
                 <MenuItem
-                  style={{ justifyContent: 'center' }}
+                  style={{ justifyContent: 'center', padding: 0 }}
                   key={setting}
                   onClick={handleCloseUserMenu}
                 >
-                  <Typography textTransform="capitalize" textAlign="center">
+                  <Typography textTransform="capitalize" textAlign="center" display="flex" width="100%">
                     <Link
-                      style={{ textDecoration: 'none' }}
+                      style={{ textDecoration: 'none', width: '100%', padding: '6px 16px' }}
                       to={setting === 'perfil' ? '/profile' : '/'}
                     >
                       {setting}

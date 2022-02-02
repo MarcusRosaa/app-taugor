@@ -82,10 +82,11 @@ export default function Profile() {
             type="submit"
             fullWidth
             variant="outlined"
-            sx={{ mt: '16px', mb: '8px', maxWidth: '200px' }}
-            onClick={handleLogout}
+            sx={{
+              mt: '16px', mb: '8px', maxWidth: '200px', p: 0,
+            }}
           >
-            <Link to="/update-profile">
+            <Link to="/update-profile" style={{ width: '100%', padding: '6px 16px' }}>
               Editar Perfil
             </Link>
           </Button>

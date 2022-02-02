@@ -17,13 +17,10 @@ import Copyright from '../Copyright';
 
 const theme = createTheme();
 
-export default function Signup() {
-  const firstNameRef = useRef();
-  const lastNameRef = useRef();
+export default function LoginForm() {
   const emailRef = useRef();
   const passwordRef = useRef();
-  const passwordConfirmRef = useRef();
-  const { signup } = useAuth();
+  const { login } = useAuth();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const history = useNavigate();
@@ -32,19 +29,18 @@ export default function Signup() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (passwordRef.current.value !== passwordConfirmRef.current.value) {
-      return setError('Senhas não conferem');
-    }
 
     try {
       setError('');
       setLoading(true);
-      await signup(emailRef.current.value, passwordRef.current.value);
+      await login(emailRef.current.value, passwordRef.current.value);
+
       history(from, { replace: true });
     } catch {
-      setError('Falha ao criar conta');
+      setError('Falha ao logar na conta');
     }
 
+    console.log(location.state?.from?.pathname);
     setLoading(false);
   }
 
@@ -64,8 +60,9 @@ export default function Signup() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Crie sua conta
+            Logue na sua conta
           </Typography>
+
           {error && (
           <Alert variant="outlined" severity="error" sx={{ width: 1, justifyContent: 'center', mt: '16px' }}>
             {' '}
@@ -76,29 +73,6 @@ export default function Signup() {
 
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  inputRef={firstNameRef}
-                  name="firstName"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="Primeiro nome"
-                  autoComplete="given-name"
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  inputRef={lastNameRef}
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Sobrenome"
-                  name="lastName"
-                  autoComplete="family-name"
-                />
-              </Grid>
               <Grid item xs={12}>
                 <TextField
                   inputRef={emailRef}
@@ -123,18 +97,6 @@ export default function Signup() {
                   autoComplete="new-password"
                 />
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  inputRef={passwordConfirmRef}
-                  required
-                  fullWidth
-                  name="passwordConfirm"
-                  label="Confirmar Senha"
-                  type="password"
-                  id="passwordConfirm"
-                  autoComplete="new-password"
-                />
-              </Grid>
             </Grid>
             <Button
               type="submit"
@@ -143,16 +105,21 @@ export default function Signup() {
               sx={{ mt: 3, mb: 2 }}
               disabled={loading}
             >
-              Criar Conta
+              Logar na conta
             </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link to="/login" variant="body2">
-                  Já possui uma conta? Logue aqui
-                </Link>
-              </Grid>
-            </Grid>
           </Box>
+          <Grid container alignItems="flex-end" flexDirection="column">
+            <Grid item sx={{ mb: '8px' }}>
+              <Link to="/forgot-password" variant="body2">
+                Esqueceu sua senha?
+              </Link>
+            </Grid>
+            <Grid item>
+              <Link to="/signup" variant="body2">
+                Não possui uma conta? Crie uma aqui
+              </Link>
+            </Grid>
+          </Grid>
         </Box>
         <Copyright sx={{ mt: 5 }} />
       </Container>

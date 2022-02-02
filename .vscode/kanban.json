@@ -1,0 +1,46 @@
+{
+    "title": "Kanban",
+    "cols": [
+        {
+            "title": "Bugs",
+            "tasks": [
+                {
+                    "text": "Tentar manter estado de logado apos logar e tentar voltar para pagina de login/registro(LOW)",
+                    "id": "ckz4g6jv7000i3p5scnti9yt0"
+                },
+                {
+                    "text": "Bug de não reconhecimento de login ao entrar na pagina de editar contatos",
+                    "id": "ckz4g5iys000h3p5salg2lkzo"
+                }
+            ],
+            "id": "ckz4g3fvx000a3p5sqg086e41",
+            "color": "#eb144c"
+        },
+        {
+            "title": "To-Do",
+            "tasks": [
+                {
+                    "text": "Tirar componentes da pasta /Pages e criar componentes genericos na pasta /Components",
+                    "id": "ckz4g3fvx000b3p5sluo2gh3c"
+                }
+            ],
+            "id": "ckz4g3fvx000c3p5srcwd5793",
+            "color": "#fcb900"
+        },
+        {
+            "title": "Doing",
+            "tasks": [],
+            "id": "ckz4g3fvy000d3p5sbxovacox",
+            "color": "#0693e3"
+        },
+        {
+            "title": "Done",
+            "tasks": [],
+            "id": "ckz4g3fvy000e3p5s8dcgof46",
+            "color": "#00d084"
+        }
+    ],
+    "autosave": true,
+    "saveToFile": true,
+    "timestamp": 1643740352361
+}

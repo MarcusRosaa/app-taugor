@@ -21,9 +21,12 @@ export default function UpdateProfile() {
   const emailRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
+
   const { currentUser, updatePasswordInfo, updateEmailInfo } = useAuth();
+
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
   const history = useNavigate();
 
   async function handleSubmit(e) {
@@ -40,6 +43,7 @@ export default function UpdateProfile() {
     if (emailRef.current.value !== emailRef.current) {
       promises.push(updateEmailInfo(emailRef.current.value));
     }
+
     if (passwordRef.current.value) {
       promises.push(updatePasswordInfo(passwordRef.current.value));
     }
@@ -85,7 +89,6 @@ export default function UpdateProfile() {
                 <TextField
                   inputRef={firstNameRef}
                   name="firstName"
-                  required
                   fullWidth
                   id="firstName"
                   label="Primeiro nome"
@@ -96,7 +99,6 @@ export default function UpdateProfile() {
               <Grid item xs={12} sm={6}>
                 <TextField
                   inputRef={lastNameRef}
-                  required
                   fullWidth
                   id="lastName"
                   label="Sobrenome"
