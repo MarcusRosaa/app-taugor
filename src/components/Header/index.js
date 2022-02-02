@@ -265,5 +265,9 @@ export default function Header({ page }) {
 }
 
 Header.propTypes = {
-  page: PropTypes.string.isRequired,
+  page: PropTypes.string,
+};
+
+Header.defaultProps = {
+  page: undefined,
 };
