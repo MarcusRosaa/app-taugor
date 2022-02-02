@@ -12,6 +12,7 @@ import UpdateProfile from './pages/UpdateProfile';
 import { AuthProvider } from './contexts/AuthContext';
 
 import PrivateRoute from './components/PrivateRoute';
+import TaskForm from './components/TaskFrom';
 
 export default function Routes() {
   return (
@@ -45,6 +46,10 @@ export default function Routes() {
         <Route
           path="/update-profile"
           element={<PrivateRoute><UpdateProfile /></PrivateRoute>}
+        />
+        <Route
+          path="/new-task"
+          element={<PrivateRoute><TaskForm /></PrivateRoute>}
         />
       </Switch>
     </AuthProvider>

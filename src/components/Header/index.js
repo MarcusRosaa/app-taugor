@@ -1,41 +1,73 @@
+import { useEffect, useState } from 'react';
+import { PropTypes } from 'prop-types';
+
 import {
   AppBar, Box, Toolbar, IconButton, Typography, Menu,
   Container, Avatar, Button, Tooltip, MenuItem,
 } from '@mui/material';
-
-import { Link } from 'react-router-dom';
-
 import MenuIcon from '@mui/icons-material/Menu';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import AddIcon from '@mui/icons-material/Add';
 
-import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 import logo from '../../assets/images/taugorLogo.png';
 
-const pages = ['Products', 'Pricing', 'Blog'];
+import { useAuth } from '../../contexts/AuthContext';
+import { NavMenuButton, MobileNavMenu } from './styles';
+
 const settings = ['perfil', 'dashboard'];
 
-export default function Header() {
+export default function Header({ page }) {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const [listTasksButtonSelected, setListTasksButtonSelected] = useState(false);
+  const [createTaskButtonSelected, setCreateTaskButtonSelected] = useState(false);
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
+  const { logout } = useAuth();
+  const history = useNavigate();
 
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
+  useEffect(() => {
+    if (page === '/') {
+      setListTasksButtonSelected(true);
+    } else if (page === 'new-task') {
+      setCreateTaskButtonSelected(true);
+    }
+  }, [page]);
 
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
+  async function handleLogout() {
+    try {
+      await logout();
+      history('/login');
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+  const handleOpenNavMenu = (event) => setAnchorElNav(event.currentTarget);
 
-  function handleLogout() {
+  const handleOpenUserMenu = (event) => setAnchorElUser(event.currentTarget);
 
+  const handleCloseNavMenu = () => setAnchorElNav(null);
+
+  const handleCloseUserMenu = () => setAnchorElUser(null);
+
+  function handleListTasks() {
+    handleCloseNavMenu();
+
+    setCreateTaskButtonSelected(false);
+    setListTasksButtonSelected(true);
+
+    history('/');
+  }
+
+  function handleCreateTask() {
+    handleCloseNavMenu();
+
+    setListTasksButtonSelected(false);
+    setCreateTaskButtonSelected(true);
+
+    history('/new-task');
   }
 
   return (
@@ -98,11 +130,21 @@ export default function Header() {
                 display: { xs: 'flex', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
+              <MobileNavMenu
+                onClick={handleListTasks}
+                className={listTasksButtonSelected ? 'active' : 'not_active'}
+              >
+                <ViewListIcon sx={{ mr: '5px', mb: '2px' }} />
+                <Typography textAlign="center">Solicitações</Typography>
+              </MobileNavMenu>
+
+              <MobileNavMenu
+                onClick={handleCreateTask}
+                className={createTaskButtonSelected ? 'active' : 'not_active'}
+              >
+                <AddIcon sx={{ mr: '5px', mb: '2px' }} />
+                <Typography textAlign="center">Nova solicitação</Typography>
+              </MobileNavMenu>
             </Menu>
           </Box>
           <Box
@@ -124,22 +166,43 @@ export default function Header() {
               src={logo}
             />
           </Box>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
-            ))}
+          <Box sx={{
+            flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end', m: '0 16px',
+          }}
+          >
+
+            <NavMenuButton
+              variant={listTasksButtonSelected ? 'contained' : 'outlined'}
+              onClick={handleListTasks}
+              sx={{
+                my: 2,
+                mx: '10px',
+                display: 'flex',
+              }}
+              className={listTasksButtonSelected ? 'active' : 'not_active'}
+            >
+              <ViewListIcon sx={{ mr: '5px' }} />
+              Solicitações
+            </NavMenuButton>
+            <NavMenuButton
+              variant={createTaskButtonSelected ? 'contained' : 'outlined'}
+              onClick={handleCreateTask}
+              sx={{
+                my: 2,
+                mx: '10px',
+                display: 'flex',
+              }}
+              className={createTaskButtonSelected ? 'active' : 'not_active'}
+            >
+              <AddIcon sx={{ mr: '5px' }} />
+              Nova solicitação
+            </NavMenuButton>
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Abrir configurações">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar src="/broken-image.jpg" />
               </IconButton>
             </Tooltip>
             <Menu
@@ -177,13 +240,15 @@ export default function Header() {
               <MenuItem
                 style={{ justifyContent: 'center' }}
                 onClick={handleCloseUserMenu}
+                sx={{ p: 0 }}
               >
                 <Button
                   sx={{
                     color: '#1565c0',
                     fontSize: '16px',
                     textTransform: 'capitalize',
-                    padding: '0',
+                    padding: '6px 16px',
+                    width: 1,
                   }}
                   variant="text"
                   onClick={handleLogout}
@@ -198,3 +263,7 @@ export default function Header() {
     </AppBar>
   );
 }
+
+Header.propTypes = {
+  page: PropTypes.string.isRequired,
+};

@@ -5,7 +5,7 @@ import {
   Box, CssBaseline, TextField, Alert,
 } from '@mui/material';
 
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
@@ -24,8 +24,6 @@ export default function LoginForm() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const history = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || '/';
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -35,12 +33,11 @@ export default function LoginForm() {
       setLoading(true);
       await login(emailRef.current.value, passwordRef.current.value);
 
-      history(from, { replace: true });
+      history('/', { replace: true });
     } catch {
       setError('Falha ao logar na conta');
     }
 
-    console.log(location.state?.from?.pathname);
     setLoading(false);
   }
 

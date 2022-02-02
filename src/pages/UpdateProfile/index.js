@@ -5,9 +5,9 @@ import {
   Box, CssBaseline, TextField, Alert,
 } from '@mui/material';
 
-import { Link, useNavigate } from 'react-router-dom';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
 
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -70,11 +70,12 @@ export default function UpdateProfile() {
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
+            <ModeEditIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
             Editar dados do perfil
           </Typography>
+
           {error && (
           <Alert variant="outlined" severity="error" sx={{ width: 1, justifyContent: 'center', mt: '16px' }}>
             {' '}
