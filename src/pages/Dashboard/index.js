@@ -1,12 +1,17 @@
 import Header from '../../components/Header';
+import DashboardHeader from '../../components/DashboardHeader';
+import DashboardTable from '../../components/DashboardTable';
+
+import { Container } from './styles';
 
 export default function Dashboard() {
   return (
     <>
       <Header page="/" />
-      <div>
-        <h1>dashboard</h1>
-      </div>
+      <Container>
+        <DashboardHeader />
+        <DashboardTable />
+      </Container>
     </>
   );
 }
