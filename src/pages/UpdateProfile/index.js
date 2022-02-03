@@ -29,8 +29,8 @@ export default function UpdateProfile() {
 
   const history = useNavigate();
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+  async function handleSubmit(event) {
+    event.preventDefault();
 
     if (passwordRef.current.value !== passwordConfirmRef.current.value) {
       return setError('Senhas não conferem');

@@ -6,7 +6,7 @@ import {
   Container, HeaderFilters, InputSearchContainer, InputSelectContainer, OrderItemContainer,
 } from './styles';
 
-export default function DashboardHeader() {
+export default function TasksFilter() {
   // const [searchTerm, setSearchTerm] = useState('');
   const [orderBy, setOrderBy] = useState('asc');
 

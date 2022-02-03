@@ -1,6 +1,6 @@
 import Header from '../../components/Header';
-import DashboardHeader from '../../components/DashboardHeader';
-import DashboardTable from '../../components/DashboardTable';
+import TasksFilter from '../../components/TasksFilter';
+import TasksList from '../../components/TasksList';
 
 import { Container } from './styles';
 
@@ -9,8 +9,8 @@ export default function Dashboard() {
     <>
       <Header page="/" />
       <Container>
-        <DashboardHeader />
-        <DashboardTable />
+        <TasksFilter />
+        <TasksList />
       </Container>
     </>
   );

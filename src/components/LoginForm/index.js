@@ -25,8 +25,8 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const history = useNavigate();
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+  async function handleSubmit(event) {
+    event.preventDefault();
 
     try {
       setError('');

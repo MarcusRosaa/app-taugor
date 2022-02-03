@@ -30,8 +30,8 @@ export default function SignupForm() {
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+  async function handleSubmit(event) {
+    event.preventDefault();
     if (passwordRef.current.value !== passwordConfirmRef.current.value) {
       return setError('Senhas não conferem');
     }
