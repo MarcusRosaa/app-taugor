@@ -11,7 +11,8 @@ import {
   updatePassword,
 } from 'firebase/auth';
 import PropTypes from 'prop-types';
-import { auth } from '../firebase';
+import { collection, doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../firebase';
 
 const AuthContext = createContext();
 
@@ -23,8 +24,16 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
   const [loading, setLoading] = useState(true);
 
-  function signup(email, password) {
-    return createUserWithEmailAndPassword(auth, email, password);
+  async function signup(email, password) {
+    await createUserWithEmailAndPassword(auth, email, password);
+
+    const usersCollectionRef = collection(db, 'users');
+    
+    await setDoc(doc(db, "cities", "LA"), {
+      name: "Los Angeles",
+      state: "CA",
+      country: "USA"
+    });
   }
 
   function login(email, password) {

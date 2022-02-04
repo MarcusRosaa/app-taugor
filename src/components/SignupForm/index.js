@@ -40,6 +40,7 @@ export default function SignupForm() {
       setError('');
       setLoading(true);
       await signup(emailRef.current.value, passwordRef.current.value);
+
       history(from, { replace: true });
     } catch {
       setError('Falha ao criar conta');

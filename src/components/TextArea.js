@@ -17,7 +17,7 @@ export default styled.textarea`
     border-color: ${({ theme }) => theme.primaryColors.darkerGray};
   }
 
-  ${({ theme, error }) => error && css`
+  ${({ error }) => error && css`
     color: #ef2b2a;
     border-color: #ef2b2a;
   `}

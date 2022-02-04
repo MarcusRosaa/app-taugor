@@ -1,6 +1,11 @@
-import { useRef } from 'react';
-import { collection, addDoc } from 'firebase/firestore';
+import { useEffect, useRef, useState } from 'react';
 
+import {
+  collection, addDoc, doc, getDoc,
+} from 'firebase/firestore';
+import {
+  getDownloadURL, getStorage, ref, uploadBytes,
+} from 'firebase/storage';
 import { db } from '../../firebase';
 
 import { ButtonContainer, Form } from './styles';
@@ -17,12 +22,12 @@ import FileInput from '../FileInput';
 export default function AddTaskForm() {
   const titleInput = useRef('');
   const descriptionInput = useRef('');
-  const statusCategoryInput = useRef('todo');
+  const statusCategoryInput = useRef('');
   const productInput = useRef('');
   const priorityInput = useRef('');
   const problemInput = useRef('');
   const impactedUsersInput = useRef('');
-  const indexedDocumentInput = useRef('');
+  const [indexedDocumentInput, setIndexedDocumentInput] = useState('');
 
   const {
     errors,
@@ -33,17 +38,29 @@ export default function AddTaskForm() {
 
   const isFormValid = (
     titleInput
-    && statusCategoryInput
-    && problemInput
     && indexedDocumentInput
     && errors.length === 0
   );
 
-  function handleTitleChange(event) {
-    console.log(titleInput.current.value);
+  async function handleIndexedDocumentChange(event) {
+    const file = event.target.files[0];
 
-    if (!event.target.value) {
-      setError({ field: 'title', message: 'Título é obrigatório.' });
+    if (!file) {
+      setError({ field: 'file', message: 'Adicione 1 arquivo.' });
+    } else {
+      const storage = getStorage();
+      const filesStorageRef = ref(storage, `files/${event.target.files[0].name}`);
+
+      removeError('file');
+
+      await uploadBytes(filesStorageRef, file);
+      setIndexedDocumentInput(await getDownloadURL(filesStorageRef));
+    }
+  }
+
+  function handleTitleInputChange() {
+    if (!titleInput.current.value) {
+      setError({ field: 'title', message: 'Nome é obrigatório.' });
     } else {
       removeError('title');
     }
@@ -51,23 +68,38 @@ export default function AddTaskForm() {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    if (titleInput !== '') {
-      console.log('oi');
-      await addDoc(collection(db, 'tasks'), {
+
+    if (titleInput.current.value !== '' && indexedDocumentInput !== '') {
+      await addDoc(collection(db, 'users'), {
         title: titleInput.current.value,
+        file: indexedDocumentInput,
       });
     }
   }
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      const tasksRef = doc(db, 'users', 'user');
+      const tasksSnap = await getDoc(tasksRef);
+
+      if (tasksSnap.exists()) {
+        console.log('Document data:', tasksSnap.data());
+      } else {
+        // doc.data() will be undefined in this case
+        console.log('No such document!');
+      }
+    };
+    fetchTasks();
+  }, []);
 
   return (
     <Form onSubmit={handleSubmit} noValidate>
       <FormGroup error={getErrorMessageByFieldName('title')}>
         <Input
+          onChange={handleTitleInputChange}
           ref={titleInput}
           error={getErrorMessageByFieldName('title')}
           placeholder="Título *"
-          value={titleInput.current.value}
-          onChange={handleTitleChange}
         />
       </FormGroup>
 
@@ -96,7 +128,7 @@ export default function AddTaskForm() {
           ref={statusCategoryInput.current.value}
           defaultValue="todo"
         >
-          <option value="todo">A fazer</option>
+          <option value="todo">Pendente</option>
           <option value="doing">Em andamento</option>
           <option value="done">Fenalizada</option>
           <option value="stoped">Operação parada</option>
@@ -140,13 +172,14 @@ export default function AddTaskForm() {
         </Select>
       </FormGroup>
 
-      <FormGroup>
+      <FormGroup error={getErrorMessageByFieldName('title')}>
         <label htmlFor="files">Selecione um arquivo .txt ou .pdf *</label>
         <FileInput
+          error={getErrorMessageByFieldName('file')}
           type="file"
           accept=".txt, .pdf"
-          ref={indexedDocumentInput.current.value}
           id="files"
+          onChange={handleIndexedDocumentChange}
         />
       </FormGroup>
 
