@@ -1,13 +1,15 @@
 import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import {
   addDoc,
   collection,
+  doc,
+  updateDoc,
 } from 'firebase/firestore';
 import {
   getDownloadURL, getStorage, ref, uploadBytes,
 } from 'firebase/storage';
-import { useNavigate } from 'react-router-dom';
 import { db } from '../../firebase';
 
 import { useAuth } from '../../contexts/AuthContext';
@@ -75,16 +77,14 @@ export default function AddTaskForm() {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    console.log(descriptionInput.current.value);
-
     if (titleInput.current.value && indexedDocumentInput) {
       const userID = currentUser.uid;
       const currentUserTasksDocumentRef = collection(db, 'users', `${userID}`, 'tasks');
 
       removeError('file');
       removeError('title');
-
-      await addDoc(
+      // adiciona uma nova task ao banco de dados
+      const newTask = await addDoc(
         currentUserTasksDocumentRef,
         {
           title: titleInput.current.value,
@@ -97,6 +97,17 @@ export default function AddTaskForm() {
           impacted_users: impactedUsersInput.current.value || '',
         },
       );
+
+      const newTaskDocumentID = newTask.id;
+      const newTaskDocumentRef = doc(db, 'users', `${userID}`, 'tasks', `${newTaskDocumentID}`);
+      await updateDoc(
+        newTaskDocumentRef,
+        {
+          id: newTaskDocumentID,
+        },
+      );
+
+      // redireciona para a home(dashboard)
       history('/', { replace: true });
     } else {
       setError({ field: 'file', message: 'Adicione 1 arquivo.' });
