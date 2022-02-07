@@ -11,7 +11,9 @@ import {
   updatePassword,
 } from 'firebase/auth';
 import PropTypes from 'prop-types';
-import { collection, doc, setDoc } from 'firebase/firestore';
+import {
+  doc, setDoc, getDoc,
+} from 'firebase/firestore';
 import { auth, db } from '../firebase';
 
 const AuthContext = createContext();
@@ -26,14 +28,6 @@ export function AuthProvider({ children }) {
 
   async function signup(email, password) {
     await createUserWithEmailAndPassword(auth, email, password);
-
-    const usersCollectionRef = collection(db, 'users');
-    
-    await setDoc(doc(db, "cities", "LA"), {
-      name: "Los Angeles",
-      state: "CA",
-      country: "USA"
-    });
   }
 
   function login(email, password) {
@@ -59,6 +53,30 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
+
+      async function setUserDataOnDocument() {
+        // Cria referencia para verificar se documento do user atual ja existe
+        const currentUserDocumentRef = doc(db, 'users', currentUser?.uid);
+        const documentSnap = await getDoc(currentUserDocumentRef);
+
+        // Se documento não existir cria um com os dados do usuario atual
+        // se existir nao faz nada, pois user ja tem documento gerado na coleçao
+        // de usarios
+        if (!documentSnap.exists()) {
+          await setDoc(
+            currentUserDocumentRef,
+            {
+              account_id: currentUser.uid,
+            },
+            { merge: true },
+          );
+        }
+      }
+      // Se user logado, adicionar um user como document para a coleçao de 'users'
+      if (currentUser) {
+        setUserDataOnDocument();
+      }
+
       setLoading(false);
     });
 

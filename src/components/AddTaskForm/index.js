@@ -1,12 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import {
-  collection, addDoc, doc, getDoc,
+  addDoc,
+  collection,
 } from 'firebase/firestore';
 import {
   getDownloadURL, getStorage, ref, uploadBytes,
 } from 'firebase/storage';
+import { useNavigate } from 'react-router-dom';
 import { db } from '../../firebase';
+
+import { useAuth } from '../../contexts/AuthContext';
 
 import { ButtonContainer, Form } from './styles';
 
@@ -28,6 +32,8 @@ export default function AddTaskForm() {
   const problemInput = useRef('');
   const impactedUsersInput = useRef('');
   const [indexedDocumentInput, setIndexedDocumentInput] = useState('');
+  const { currentUser } = useAuth();
+  const history = useNavigate();
 
   const {
     errors,
@@ -69,28 +75,34 @@ export default function AddTaskForm() {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    if (titleInput.current.value !== '' && indexedDocumentInput !== '') {
-      await addDoc(collection(db, 'users'), {
-        title: titleInput.current.value,
-        file: indexedDocumentInput,
-      });
+    console.log(descriptionInput.current.value);
+
+    if (titleInput.current.value && indexedDocumentInput) {
+      const userID = currentUser.uid;
+      const currentUserTasksDocumentRef = collection(db, 'users', `${userID}`, 'tasks');
+
+      removeError('file');
+      removeError('title');
+
+      await addDoc(
+        currentUserTasksDocumentRef,
+        {
+          title: titleInput.current.value,
+          file: indexedDocumentInput,
+          task_description: descriptionInput.current.value || '',
+          product: productInput.current.value || '',
+          status: statusCategoryInput.current.value || '',
+          priority: priorityInput.current.value || '',
+          problem_description: descriptionInput.current.value || '',
+          impacted_users: impactedUsersInput.current.value || '',
+        },
+      );
+      history('/', { replace: true });
+    } else {
+      setError({ field: 'file', message: 'Adicione 1 arquivo.' });
+      setError({ field: 'title', message: 'Título é obrigatório.' });
     }
   }
-
-  useEffect(() => {
-    const fetchTasks = async () => {
-      const tasksRef = doc(db, 'users', 'user');
-      const tasksSnap = await getDoc(tasksRef);
-
-      if (tasksSnap.exists()) {
-        console.log('Document data:', tasksSnap.data());
-      } else {
-        // doc.data() will be undefined in this case
-        console.log('No such document!');
-      }
-    };
-    fetchTasks();
-  }, []);
 
   return (
     <Form onSubmit={handleSubmit} noValidate>
@@ -106,26 +118,23 @@ export default function AddTaskForm() {
       <FormGroup>
         <TextArea
           rows={4}
-          ref={descriptionInput.current.value}
+          ref={descriptionInput}
           type="text"
           placeholder="Descrição da tarefa"
-          value={descriptionInput.current.value}
         />
       </FormGroup>
 
       <FormGroup>
         <Input
-          ref={productInput.current.value}
+          ref={productInput}
           type="text"
           placeholder="Produto ou serviço afetado"
-          value={productInput.current.value}
         />
       </FormGroup>
 
       <FormGroup>
         <Select
-          value={statusCategoryInput.current.value}
-          ref={statusCategoryInput.current.value}
+          ref={statusCategoryInput}
           defaultValue="todo"
         >
           <option value="todo">Pendente</option>
@@ -137,30 +146,27 @@ export default function AddTaskForm() {
 
       <FormGroup>
         <Select
-          value={priorityInput.current.value}
-          ref={priorityInput.current.value}
+          ref={priorityInput}
           defaultValue=""
         >
           <option value="">Prioridade</option>
-          <option value="doing">Alta</option>
-          <option value="done">Média</option>
-          <option value="stoped">Baixa</option>
+          <option value="high">Alta</option>
+          <option value="normal">Média</option>
+          <option value="low">Baixa</option>
         </Select>
       </FormGroup>
 
       <FormGroup>
         <Input
-          ref={problemInput.current.value}
+          ref={problemInput}
           type="text"
           placeholder="Descrição do problema"
-          value={problemInput.current.value}
         />
       </FormGroup>
 
       <FormGroup>
         <Select
-          value={impactedUsersInput.current.value}
-          ref={impactedUsersInput.current.value}
+          ref={impactedUsersInput}
           defaultValue=""
         >
           <option value="">Usuários impactados</option>
