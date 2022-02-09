@@ -51,31 +51,29 @@ export function AuthProvider({ children }) {
   }
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
 
-      async function setUserDataOnDocument() {
-        // Cria referencia para verificar se documento do user atual ja existe
-        const currentUserDocumentRef = doc(db, 'users', currentUser?.uid);
-        const documentSnap = await getDoc(currentUserDocumentRef);
+      if (!currentUser) return;
 
-        // Se documento não existir cria um com os dados do usuario atual
-        // se existir nao faz nada, pois user ja tem documento gerado na coleçao
-        // de usarios
-        if (!documentSnap.exists()) {
-          await setDoc(
-            currentUserDocumentRef,
-            {
-              account_id: currentUser.uid,
-            },
-            { merge: true },
-          );
-        }
+      // Cria referencia para verificar se documento do user atual ja existe
+      const currentUserDocumentRef = doc(db, 'users', currentUser?.uid);
+      const documentSnap = await getDoc(currentUserDocumentRef);
+
+      // Se documento não existir cria um com os dados do usuario atual
+      // se existir nao faz nada, pois user ja tem documento gerado na coleçao
+      // de usarios
+      if (!documentSnap.exists()) {
+        await setDoc(
+          currentUserDocumentRef,
+          {
+            account_id: currentUser.uid,
+          },
+          { merge: true },
+        );
       }
+
       // Se user logado, adicionar um user como document para a coleçao de 'users'
-      if (currentUser) {
-        setUserDataOnDocument();
-      }
 
       setLoading(false);
     });

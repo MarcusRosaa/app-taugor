@@ -93,7 +93,7 @@ export default function AddTaskForm() {
           product: productInput.current.value || '',
           status: statusCategoryInput.current.value || '',
           priority: priorityInput.current.value || '',
-          problem_description: descriptionInput.current.value || '',
+          problem_description: problemInput.current.value || '',
           impacted_users: impactedUsersInput.current.value || '',
         },
       );
@@ -148,10 +148,10 @@ export default function AddTaskForm() {
           ref={statusCategoryInput}
           defaultValue="todo"
         >
-          <option value="todo">Pendente</option>
-          <option value="doing">Em andamento</option>
-          <option value="done">Fenalizada</option>
-          <option value="stoped">Operação parada</option>
+          <option value="pendente">Pendente</option>
+          <option value="em andamento">Em andamento</option>
+          <option value="finalizada">Finalizada</option>
+          <option value="operação parada">Operação parada</option>
         </Select>
       </FormGroup>
 
@@ -161,9 +161,9 @@ export default function AddTaskForm() {
           defaultValue=""
         >
           <option value="">Prioridade</option>
-          <option value="high">Alta</option>
-          <option value="normal">Média</option>
-          <option value="low">Baixa</option>
+          <option value="alta">Alta</option>
+          <option value="média">Média</option>
+          <option value="baixa">Baixa</option>
         </Select>
       </FormGroup>
 
@@ -181,11 +181,11 @@ export default function AddTaskForm() {
           defaultValue=""
         >
           <option value="">Usuários impactados</option>
-          <option value="1">Apenas 1</option>
-          <option value="10">1 a 10 usuários</option>
-          <option value="30">11 a 30 usuários</option>
-          <option value="50">31 a 50 usuários</option>
-          <option value="51">Mais de 50</option>
+          <option value="apenas 1">Apenas 1</option>
+          <option value="1 a 10 usuários">1 a 10 usuários</option>
+          <option value="11 a 30 usuários">11 a 30 usuários</option>
+          <option value="31 a 50 usuários">31 a 50 usuários</option>
+          <option value="mais de 50 usuários">Mais de 50</option>
         </Select>
       </FormGroup>
 
