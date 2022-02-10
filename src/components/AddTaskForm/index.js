@@ -128,7 +128,7 @@ export default function AddTaskForm() {
 
       <FormGroup>
         <TextArea
-          rows={4}
+          rows="6"
           ref={descriptionInput}
           type="text"
           placeholder="Descrição da tarefa"

@@ -9,7 +9,7 @@ export const Container = styled.div`
 export const TasksContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: stretch;
   margin-top: 32px;
 
   & > :nth-child(1n) {
@@ -50,6 +50,11 @@ export const Card = styled.div`
 
   & .card_problem_description {
     margin-top: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* number of lines to show */
+    -webkit-box-orient: vertical;
   }
 
   @media only screen and (max-width: 1200px) {
@@ -67,14 +72,21 @@ export const CardHeader = styled.header`
   display: flex;
   align-items: center;
 
-  & .card_icon__edit {
-    fill: #0e52d7;
+  & button {
     margin-left: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
   }
 
-  & .card_icon__delete {
+  .card_icon__edit {
+    fill: #0e52d7;
+  }
+
+  .card_icon__delete {
     fill: #d11414;
-    margin-left: 8px;
   }
 `;
 

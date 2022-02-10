@@ -1,13 +1,13 @@
 import {
-  collection, getDocs, limit, orderBy, query,
+  collection, deleteDoc, doc, getDocs, limit, orderBy, query,
 } from 'firebase/firestore';
 import {
-  useEffect, useRef, useState,
+  useEffect, useState,
+  useCallback,
 } from 'react';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-
 import priorityArrowIcon from '../../assets/images/arrowhead-up.png';
 
 import priorityNormalIcon from '../../assets/images/equal.png';
@@ -24,15 +24,15 @@ import {
 } from './styles';
 
 import NoTasks from '../../components/NoTasks';
-import TaskModal from '../../components/TaskModal';
+import TaskModalInfos from '../../components/TaskModalInfos';
+import TaskModalEdit from '../../components/TaskModalEdit';
 
 export default function Dashboard() {
   const [tasks, setTasks] = useState(null);
+  const [taskDetailedInfo, setTaskDetailedInfo] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(null);
   const { currentUser } = useAuth();
-  const [elementModal, setElementModal] = useState(null);
-  const modalData = useRef();
 
   useEffect(() => {
     const queryResponse = async () => {
@@ -41,7 +41,7 @@ export default function Dashboard() {
       // referencia apontando para a coleçao de tasks do usuario
       const tasksCollectionRef = collection(db, 'users', `${currentUser?.uid}`, 'tasks');
       // busca querys(tasks) da coleçao referenciada acima
-      const tasksQuery = query(tasksCollectionRef, orderBy('title', 'asc'), limit(30));
+      const tasksQuery = query(tasksCollectionRef, orderBy('task_description', 'asc'), limit(30));
       // funçao assincrona para pegar(GET) as tasks da query
       const response = await getDocs(tasksQuery);
 
@@ -56,19 +56,41 @@ export default function Dashboard() {
     };
 
     queryResponse();
-  }, []);
+  }, [loading]);
 
-  function handleOpenModal() {
-    setShowModal((prevState) => !prevState);
-    document.querySelector('body').setAttribute('id', 'layer');
+  async function handleDeleteTask(event, taskId) {
+    event.preventDefault();
+    setLoading(true);
+    const taskDocumentRef = doc(db, 'users', `${currentUser?.uid}`, 'tasks', `${taskId}`);
+
+    await deleteDoc(taskDocumentRef);
+
+    setLoading(false);
   }
 
-  function handleCloseModal(event) {
-    setElementModal(event.target);
+  const handleOpenEditModal = useCallback((event, taskInfos) => {
+    event.preventDefault();
+    document.querySelector('body').setAttribute('id', 'layer');
 
+    setShowModal('edit');
+
+    setTaskDetailedInfo(taskInfos);
+  }, []);
+
+  const handleOpenInfosModal = useCallback((event, task) => {
+    event.preventDefault();
+
+    setShowModal('infos');
+
+    setTaskDetailedInfo({ ...task.data() });
+
+    document.querySelector('body').setAttribute('id', 'layer');
+  }, []);
+
+  function handleCloseModal(event) {
     if (event.target.classList.contains('modalLayer')) {
       document.querySelector('body').removeAttribute('id');
-      setShowModal(false);
+      setShowModal(null);
     }
   }
 
@@ -87,16 +109,26 @@ export default function Dashboard() {
                     <ProgressStatus progress={task.data().status}>
                       {task.data().status}
                     </ProgressStatus>
-                    <DeleteIcon className="card_icon__delete" />
-                    <EditIcon className="card_icon__edit" />
+                    <button
+                      type="button"
+                      onClick={(event) => handleDeleteTask(event, task.data().id)}
+                    >
+                      <DeleteIcon className="card_icon__delete" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={(event) => handleOpenEditModal(event, task.data())}
+                    >
+                      <EditIcon className="card_icon__edit" />
+                    </button>
                   </CardHeader>
 
                   <CardTitle>{task.data().title}</CardTitle>
 
                   {/* descriçao do problema */}
-                  {task.data().problem_description
+                  {task.data().task_description
                   && (
-                  <p className="card_problem_description">{task.data().problem_description}</p>
+                  <p className="card_problem_description">{task.data().task_description}</p>
                   )}
 
                   <CardBottom>
@@ -117,7 +149,7 @@ export default function Dashboard() {
                       )}
                     </Priority>
 
-                    <button type="button" onClick={handleOpenModal} ref={modalData}>
+                    <button type="button" onClick={(event) => handleOpenInfosModal(event, task)}>
                       Mais detalhes
                     </button>
                   </CardBottom>
@@ -125,11 +157,19 @@ export default function Dashboard() {
               ))}
 
               {/* modal de detalhes do card */}
-              {showModal
+              {showModal && showModal === 'infos'
               && (
-              <TaskModal
-                forwardedRef={elementModal}
+              <TaskModalInfos
                 closeModal={handleCloseModal}
+                taskInfos={taskDetailedInfo}
+              />
+              )}
+
+              {showModal && showModal === 'edit'
+              && (
+              <TaskModalEdit
+                closeModal={handleCloseModal}
+                taskInfos={taskDetailedInfo}
               />
               )}
             </TasksContainer>
