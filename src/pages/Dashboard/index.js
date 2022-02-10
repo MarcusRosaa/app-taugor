@@ -2,7 +2,7 @@ import {
   collection, getDocs, limit, orderBy, query,
 } from 'firebase/firestore';
 import {
-  useEffect, useState,
+  useEffect, useRef, useState,
 } from 'react';
 
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -20,15 +20,19 @@ import { useAuth } from '../../contexts/AuthContext';
 
 import {
   Card, Container, TasksContainer, CardHeader,
-  CardTitle, Priority, ProgressStatus,
+  CardTitle, Priority, ProgressStatus, CardBottom,
 } from './styles';
 
 import NoTasks from '../../components/NoTasks';
+import TaskModal from '../../components/TaskModal';
 
 export default function Dashboard() {
   const [tasks, setTasks] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
   const { currentUser } = useAuth();
+  const [elementModal, setElementModal] = useState(null);
+  const modalData = useRef();
 
   useEffect(() => {
     const queryResponse = async () => {
@@ -54,6 +58,20 @@ export default function Dashboard() {
     queryResponse();
   }, []);
 
+  function handleOpenModal() {
+    setShowModal((prevState) => !prevState);
+    document.querySelector('body').setAttribute('id', 'layer');
+  }
+
+  function handleCloseModal(event) {
+    setElementModal(event.target);
+
+    if (event.target.classList.contains('modalLayer')) {
+      document.querySelector('body').removeAttribute('id');
+      setShowModal(false);
+    }
+  }
+
   return (
     <>
       <Header page="/" />
@@ -72,36 +90,52 @@ export default function Dashboard() {
                     <DeleteIcon className="card_icon__delete" />
                     <EditIcon className="card_icon__edit" />
                   </CardHeader>
+
                   <CardTitle>{task.data().title}</CardTitle>
 
+                  {/* descriçao do problema */}
                   {task.data().problem_description
                   && (
                   <p className="card_problem_description">{task.data().problem_description}</p>
                   )}
 
-                  <Priority priority={task.data().priority}>
-                    {task.data().priority === 'alta'
-                    && (
-                      <img src={priorityArrowIcon} alt="" />
-                    )}
+                  <CardBottom>
+                    <Priority priority={task.data().priority}>
+                      {task.data().priority === 'alta'
+                      && (
+                        <img src={priorityArrowIcon} alt="" />
+                      )}
 
-                    {task.data().priority === 'média'
-                    && (
-                      <img src={priorityNormalIcon} alt="" />
-                    )}
+                      {task.data().priority === 'média'
+                      && (
+                        <img src={priorityNormalIcon} alt="" />
+                      )}
 
-                    {task.data().priority === 'baixa'
-                    && (
-                      <img src={priorityArrowIcon} alt="" />
-                    )}
-                  </Priority>
+                      {task.data().priority === 'baixa'
+                      && (
+                        <img src={priorityArrowIcon} alt="" />
+                      )}
+                    </Priority>
+
+                    <button type="button" onClick={handleOpenModal} ref={modalData}>
+                      Mais detalhes
+                    </button>
+                  </CardBottom>
                 </Card>
               ))}
+
+              {/* modal de detalhes do card */}
+              {showModal
+              && (
+              <TaskModal
+                forwardedRef={elementModal}
+                closeModal={handleCloseModal}
+              />
+              )}
             </TasksContainer>
           )
         }
         { !loading && tasks?.length === 0 && <NoTasks /> }
-
       </Container>
     </>
   );

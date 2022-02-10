@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
+  position: relative;
   width: 100%;
   padding: 24px;
 `;
@@ -77,20 +78,6 @@ export const CardHeader = styled.header`
   }
 `;
 
-export const ProgressStatus = styled.span`
-  text-transform: uppercase;
-  padding: 8px;
-  margin-right: auto;
-  border-radius: 8px;
-  border: 1px dashed;
-  color: ${({ progress }) => {
-    if (progress === 'pendente') { return '#0e52d7'; }
-    if (progress === 'em andamento') { return '#f7be22'; }
-    if (progress === 'finalizada') return '#199a1f';
-    if (progress === 'operação parada') return '#d11414';
-  }}
-`;
-
 export const CardTitle = styled.h3`
   width: 100%;
   margin-top: 12px;
@@ -98,7 +85,6 @@ export const CardTitle = styled.h3`
 
 export const Priority = styled.div`
   width: ${({ priority }) => (priority === 'média' ? '20px' : '32px')};
-  margin-top: 10px;
 
   img {
     width: 100%;
@@ -115,4 +101,34 @@ export const Priority = styled.div`
     }
   }};
   transform:  ${({ priority }) => (priority === 'baixa' ? 'rotate(180deg)' : 'rotate(0)')}};
+`;
+
+export const CardBottom = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+
+  & button {
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 14px;
+    border: none;
+    background: none;
+  }
+`;
+
+export const ProgressStatus = styled.span`
+  text-transform: uppercase;
+  padding: 8px;
+  margin-right: auto;
+  border-radius: 8px;
+  border: 1px dashed;
+  color: ${({ progress }) => {
+    if (progress === 'pendente') return '#0e52d7';
+    if (progress === 'em andamento') return '#f7be22';
+    if (progress === 'finalizada') return '#199a1f';
+    if (progress === 'operação parada') return '#d11414';
+  }}
 `;

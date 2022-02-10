@@ -8,9 +8,21 @@ export default createGlobalStyle`
     font-family: 'Sora', sans-serif;
   }
 
+  html, body {
+    height: 100%;
+  }
+
   body {
     font-size: 16px;
     background: ${({ theme }) => theme.backgroundColor};
+  }
+
+  body#layer {
+    overflow: hidden;
+  }
+
+  body .modalLayer {
+    height: 100%;
   }
 
   button {
