@@ -11,10 +11,7 @@ import {
   updatePassword,
 } from 'firebase/auth';
 import PropTypes from 'prop-types';
-import {
-  doc, setDoc, getDoc,
-} from 'firebase/firestore';
-import { auth, db } from '../firebase';
+import { auth } from '../firebase';
 
 const AuthContext = createContext();
 
@@ -51,35 +48,12 @@ export function AuthProvider({ children }) {
   }
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
-
-      if (!currentUser) return;
-
-      // Cria referencia para verificar se documento do user atual ja existe
-      const currentUserDocumentRef = doc(db, 'users', currentUser?.uid);
-      const documentSnap = await getDoc(currentUserDocumentRef);
-
-      // Se documento não existir cria um com os dados do usuario atual
-      // se existir nao faz nada, pois user ja tem documento gerado na coleçao
-      // de usarios
-      if (!documentSnap.exists()) {
-        await setDoc(
-          currentUserDocumentRef,
-          {
-            account_id: currentUser.uid,
-          },
-          { merge: true },
-        );
-      }
-
-      // Se user logado, adicionar um user como document para a coleçao de 'users'
-
       setLoading(false);
     });
-
     return unsubscribe;
-  }, [currentUser]);
+  }, []);
 
   const value = useMemo(() => ({
     currentUser,

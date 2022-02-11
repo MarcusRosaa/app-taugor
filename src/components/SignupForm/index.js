@@ -11,13 +11,18 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+import {
+  doc, setDoc, getDoc,
+} from 'firebase/firestore';
+
 import { useAuth } from '../../contexts/AuthContext';
 
 import Copyright from '../Copyright';
-
-const theme = createTheme();
+import { db } from '../../firebase';
 
 export default function SignupForm() {
+  const theme = createTheme();
+  const { currentUser } = useAuth();
   const firstNameRef = useRef();
   const lastNameRef = useRef();
   const emailRef = useRef();
@@ -40,6 +45,25 @@ export default function SignupForm() {
       setError('');
       setLoading(true);
       await signup(emailRef.current.value, passwordRef.current.value);
+
+      if (!currentUser) return;
+
+      // Cria referencia para verificar se documento do user atual ja existe
+      const currentUserDocumentRef = doc(db, 'users', currentUser?.uid);
+      const documentSnap = await getDoc(currentUserDocumentRef);
+
+      // Se documento não existir cria um com os dados do usuario atual
+      // se existir nao faz nada, pois user ja tem documento gerado na coleçao
+      // de usarios
+      if (!documentSnap.exists()) {
+        await setDoc(
+          currentUserDocumentRef,
+          {
+            account_id: currentUser.uid,
+          },
+          { merge: true },
+        );
+      }
 
       history(from, { replace: true });
     } catch {

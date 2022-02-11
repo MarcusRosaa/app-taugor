@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import {
   Container, Input, Layer, Form, FormGroup, TextArea,
 } from './styles';
@@ -7,17 +7,9 @@ import {
 export default function TaskModalEdit({ closeModal, taskInfos }) {
   const titleInput = useRef(taskInfos.title);
   const descriptionInput = useRef('');
-  const statusCategoryInput = useRef('');
-  const productInput = useRef('');
-  const priorityInput = useRef('');
-  const problemInput = useRef('');
-  const impactedUsersInput = useRef('');
-  const [indexedDocumentInput, setIndexedDocumentInput] = useState('');
 
   const isFormValid = (
     titleInput
-    && indexedDocumentInput
-    && errors.length === 0
   );
 
   function handleEdit(event) {
@@ -54,7 +46,6 @@ export default function TaskModalEdit({ closeModal, taskInfos }) {
             <label htmlFor="product">Produto ou serviço afetado</label>
             <Input
               name="product"
-              ref={productInput}
               defaultValue={taskInfos.product}
             />
           </FormGroup>
