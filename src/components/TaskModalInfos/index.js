@@ -4,7 +4,6 @@ import {
 } from './styles';
 
 export default function TaskModalInfos({ closeModal, taskInfos }) {
-  console.log(taskInfos);
   return (
     <Layer onClick={closeModal} className="modalLayer">
       <Container>

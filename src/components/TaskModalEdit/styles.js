@@ -1,4 +1,4 @@
-import styled, { keyframes } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 
 const ModalEffect = keyframes`
   0%   {opacity: 0}
@@ -25,6 +25,10 @@ export const Container = styled.div`
   top: 50%;
   transform: translate(-50%, -50%);
   display: flex;
+
+  overflow-y: auto;
+  height: inherit;
+  max-height: 600px;
 
   border-radius: 8px;
   padding: 30px;
@@ -57,12 +61,16 @@ export const Form = styled.form`
     float: right;
 
     border: none;
-    color: rgb(60, 60, 60);
-    background: rgb(230, 230, 230);
+    color: #fff;
+    background: #1C5EA8;
 
     &:hover {
-      color: black;
-      background: rgb(220, 220, 220);
+      background: #256ec4;
+    }
+
+    &[disabled] {
+      background: #ccc;
+      cursor: default;
     }
   }
 `;
@@ -93,6 +101,15 @@ export const Input = styled.input`
     border: 1px solid rgb(210, 210, 210);
     outline: none;
   }
+
+  ${({ error }) => error && css`
+    color: #ef2b2a;
+    border-color: #ef2b2a;
+
+    &:focus {
+    border-color: #ef2b2a;
+    }
+  `}
 `;
 
 export const TextArea = styled.textarea`
@@ -110,4 +127,31 @@ export const TextArea = styled.textarea`
     border: 1px solid rgb(210, 210, 210);
     outline: none;
   }
+`;
+
+export const Select = styled.select`
+  border: none;
+  padding: 8px;
+  font-size: 15px;
+  font-weight: 300;
+  border-radius: 4px;
+
+  background: rgb(250, 250, 250);
+  border: 1px solid rgb(230, 230, 230);
+
+  &:focus {
+    border: 1px solid rgb(210, 210, 210);
+    outline: none;
+  }
+`;
+
+export const FileInput = styled.input`
+  ${({ error }) => error && css`
+    color: #ef2b2a;
+    border-color: #ef2b2a;
+
+    &:focus {
+    border-color: #ef2b2a;
+    }
+  `}
 `;
