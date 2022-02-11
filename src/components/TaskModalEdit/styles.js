@@ -20,14 +20,17 @@ export const Layer = styled.div`
 export const Container = styled.div`
   width: 100%;
   max-width: 500px;
-  border: 1px solid blue;
-  border-radius: 8px;
-  background: bisque;
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   display: flex;
+
+  border-radius: 8px;
+  padding: 30px;
+  margin-bottom: 16px;
+  background: #fff;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 
   @media (max-width: 680px) {
     max-width: 500px;
@@ -43,21 +46,51 @@ export const Form = styled.form`
   width: 100%;
   padding-right: 16px;
   padding: 16px;
+
+  button {
+    font-size: 16px;
+    font-weight: 400;
+    padding: 10px 16px;
+    border-radius: 8px;
+    transition: .2s;
+    margin-top: 10px;
+    float: right;
+
+    border: none;
+    color: rgb(60, 60, 60);
+    background: rgb(230, 230, 230);
+
+    &:hover {
+      color: black;
+      background: rgb(220, 220, 220);
+    }
+  }
 `;
 
 export const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
+  margin-bottom: 20px;
+
+  label {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
 `;
 
 export const Input = styled.input`
   padding: 8px;
   border: none;
   border-radius: 4px;
-  font-size: 16px;
-  margin: 4px 0px 16px 0;
+  font-size: 15px;
+  font-weight: 300;
+
+  background: rgb(250, 250, 250);
+  border: 1px solid rgb(230, 230, 230);
 
   &:focus {
+    border: 1px solid rgb(210, 210, 210);
     outline: none;
   }
 `;
@@ -66,11 +99,15 @@ export const TextArea = styled.textarea`
   resize: none;
   border: none;
   padding: 8px;
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 300;
   border-radius: 4px;
 
+  background: rgb(250, 250, 250);
+  border: 1px solid rgb(230, 230, 230);
 
   &:focus {
+    border: 1px solid rgb(210, 210, 210);
     outline: none;
   }
 `;

@@ -50,7 +50,7 @@ export default function TaskModalEdit({ closeModal, taskInfos }) {
             />
           </FormGroup>
 
-          <button type="submit" disabled={isFormValid}>Ediar</button>
+          <button type="submit" disabled={isFormValid}>Confirmar edição</button>
         </Form>
       </Container>
     </Layer>
