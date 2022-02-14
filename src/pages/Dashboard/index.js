@@ -32,6 +32,7 @@ export default function Dashboard() {
   const [taskDetailedInfo, setTaskDetailedInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(null);
+  const [ordenation, setOrdenation] = useState('asc');
   const { currentUser } = useAuth();
 
   useEffect(() => {
@@ -40,7 +41,11 @@ export default function Dashboard() {
 
       const tasksCollectionRef = collection(db, 'users', `${currentUser?.uid}`, 'tasks');
 
-      const tasksQuery = query(tasksCollectionRef, orderBy('title', 'desc'), limit(30));
+      const tasksQuery = query(
+        tasksCollectionRef,
+        orderBy('title', `${ordenation}`),
+        limit(30),
+      );
 
       const response = await getDocs(tasksQuery);
 
@@ -49,7 +54,7 @@ export default function Dashboard() {
     };
 
     queryResponse();
-  }, [loading]);
+  }, [loading, ordenation]);
 
   const handleOpenEditModal = useCallback((event, taskInfos) => {
     event.preventDefault();
@@ -91,11 +96,16 @@ export default function Dashboard() {
     setLoading(true);
   }
 
+  function onChangeOrderBy(newOrder) {
+    console.log(newOrder);
+    setOrdenation(newOrder);
+  }
+
   return (
     <>
       <Header page="/" />
       <Container>
-        {tasks?.length > 0 && <TasksFilter />}
+        {tasks?.length > 0 && <TasksFilter onChangeOrderBy={onChangeOrderBy} />}
         {
           tasks?.length > 0
           && (

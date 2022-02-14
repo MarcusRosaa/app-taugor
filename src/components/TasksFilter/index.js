@@ -1,22 +1,28 @@
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import SearchIcon from '@mui/icons-material/Search';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+import PropTypes from 'prop-types';
 
 import {
   Container, HeaderFilters, InputSearchContainer, InputSelectContainer, OrderItemContainer,
 } from './styles';
 
-export default function TasksFilter() {
+export default function TasksFilter({ onChangeOrderBy }) {
   // const [searchTerm, setSearchTerm] = useState('');
   const [orderBy, setOrderBy] = useState('asc');
 
   function handleChangeSearchTerm() {}
 
-  function handleToggleOrderBy() {
+  const handleToggleOrderBy = async () => {
     setOrderBy(
       (prevState) => (prevState === 'asc' ? 'desc' : 'asc'),
     );
-  }
+  };
+
+  useEffect(() => {
+    onChangeOrderBy(orderBy);
+  }, [orderBy]);
 
   return (
     <Container>
@@ -53,3 +59,7 @@ export default function TasksFilter() {
     </Container>
   );
 }
+
+TasksFilter.propTypes = {
+  onChangeOrderBy: PropTypes.func.isRequired,
+};
