@@ -1,5 +1,5 @@
 import {
-  collection, deleteDoc, doc, getDocs, limit, orderBy, query,
+  collection, deleteDoc, doc, getDocs, limit, orderBy, query, where,
 } from 'firebase/firestore';
 import {
   useEffect, useState,
@@ -28,24 +28,36 @@ import TaskModalInfos from '../../components/TaskModalInfos';
 import TaskModalEdit from '../../components/TaskModalEdit';
 
 export default function Dashboard() {
+  const { currentUser } = useAuth();
   const [tasks, setTasks] = useState(null);
   const [taskDetailedInfo, setTaskDetailedInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(null);
   const [ordenation, setOrdenation] = useState('asc');
-  const { currentUser } = useAuth();
+  const [taskStatus, setTaskStatus] = useState('pendente');
 
   useEffect(() => {
     const queryResponse = async () => {
       if (!currentUser) return;
 
-      const tasksCollectionRef = collection(db, 'users', `${currentUser?.uid}`, 'tasks');
+      let tasksQuery;
 
-      const tasksQuery = query(
-        tasksCollectionRef,
-        orderBy('title', `${ordenation}`),
-        limit(30),
-      );
+      const tasksCollectionRef = collection(db, 'users', `${currentUser?.uid}`, 'tasks');
+      console.log('oi');
+      if (ordenation || taskStatus === 'all') {
+        tasksQuery = query(
+          tasksCollectionRef,
+          orderBy('title', `${ordenation}`),
+          limit(30),
+        );
+      } else if (taskStatus && taskStatus !== 'all') {
+        console.log('oi', typeof taskStatus);
+        tasksQuery = query(
+          tasksCollectionRef,
+          where('status', '==', taskStatus),
+          limit(30),
+        );
+      }
 
       const response = await getDocs(tasksQuery);
 
@@ -54,7 +66,7 @@ export default function Dashboard() {
     };
 
     queryResponse();
-  }, [loading, ordenation]);
+  }, [loading, ordenation, taskStatus]);
 
   const handleOpenEditModal = useCallback((event, taskInfos) => {
     event.preventDefault();
@@ -96,17 +108,37 @@ export default function Dashboard() {
     setLoading(true);
   }
 
-  function onChangeOrderBy(newOrder) {
-    console.log(newOrder);
+  const onChangeOrderBy = useCallback((newOrder) => {
+    setTaskStatus(null);
     setOrdenation(newOrder);
-  }
+  }, []);
+
+  const onChangeTaskStatus = useCallback((newStatus) => {
+    if (newStatus && newStatus !== 'all') {
+      setOrdenation(null);
+    }
+
+    if (newStatus && newStatus === 'all') {
+      setOrdenation('asc');
+    }
+    console.log(newStatus);
+    setTaskStatus(newStatus);
+  }, []);
 
   return (
     <>
       <Header page="/" />
       <Container>
-        {tasks?.length > 0 && <TasksFilter onChangeOrderBy={onChangeOrderBy} />}
+        {tasks?.length > 0
+          && (
+          <TasksFilter
+            onChangeOrderBy={onChangeOrderBy}
+            onChangeTaskStatus={onChangeTaskStatus}
+
+          />
+          )}
         {
+
           tasks?.length > 0
           && (
             <TasksContainer>

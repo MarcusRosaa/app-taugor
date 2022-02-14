@@ -8,7 +8,7 @@ import {
   Container, HeaderFilters, InputSearchContainer, InputSelectContainer, OrderItemContainer,
 } from './styles';
 
-export default function TasksFilter({ onChangeOrderBy }) {
+export default function TasksFilter({ onChangeOrderBy, onChangeTaskStatus }) {
   // const [searchTerm, setSearchTerm] = useState('');
   const [orderBy, setOrderBy] = useState('asc');
 
@@ -18,6 +18,10 @@ export default function TasksFilter({ onChangeOrderBy }) {
     setOrderBy(
       (prevState) => (prevState === 'asc' ? 'desc' : 'asc'),
     );
+  };
+
+  const handleChangeStatus = async (event) => {
+    onChangeTaskStatus(event.target.value);
   };
 
   useEffect(() => {
@@ -40,7 +44,7 @@ export default function TasksFilter({ onChangeOrderBy }) {
         </InputSearchContainer>
 
         <InputSelectContainer>
-          <select name="cars" id="cars">
+          <select name="status" id="status" onChange={handleChangeStatus}>
             <option value="all" defaultValue>Tarefas</option>
             <option value="pendente">Pendente</option>
             <option value="em andamento">Em andamento</option>
@@ -63,4 +67,5 @@ export default function TasksFilter({ onChangeOrderBy }) {
 
 TasksFilter.propTypes = {
   onChangeOrderBy: PropTypes.func.isRequired,
+  onChangeTaskStatus: PropTypes.func.isRequired,
 };
