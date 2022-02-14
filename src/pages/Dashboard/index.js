@@ -38,25 +38,27 @@ export default function Dashboard() {
     const queryResponse = async () => {
       if (!currentUser) return;
 
-      // referencia apontando para a coleçao de tasks do usuario
       const tasksCollectionRef = collection(db, 'users', `${currentUser?.uid}`, 'tasks');
-      // busca querys(tasks) da coleçao referenciada acima
-      const tasksQuery = query(tasksCollectionRef, orderBy('task_description', 'asc'), limit(30));
-      // funçao assincrona para pegar(GET) as tasks da query
+
+      const tasksQuery = query(tasksCollectionRef, orderBy('title', 'desc'), limit(30));
+
       const response = await getDocs(tasksQuery);
 
-      // const lastVisible = response.docs[response.docs.length - 1];
-
-      // const next = query(collection(db, "cities"),
-      // orderBy("population"),
-      // startAfter(lastVisible),
-      // limit(25));
       setTasks(response.docs);
       setLoading(false);
     };
 
     queryResponse();
   }, [loading]);
+
+  const handleOpenEditModal = useCallback((event, taskInfos) => {
+    event.preventDefault();
+    document.querySelector('body').setAttribute('id', 'layer');
+
+    setShowModal('edit');
+
+    setTaskDetailedInfo(taskInfos);
+  }, []);
 
   async function handleDeleteTask(event, taskId) {
     event.preventDefault();
@@ -67,15 +69,6 @@ export default function Dashboard() {
 
     setLoading(false);
   }
-
-  const handleOpenEditModal = useCallback((event, taskInfos) => {
-    event.preventDefault();
-    document.querySelector('body').setAttribute('id', 'layer');
-
-    setShowModal('edit');
-
-    setTaskDetailedInfo(taskInfos);
-  }, []);
 
   const handleOpenInfosModal = useCallback((event, task) => {
     event.preventDefault();
@@ -92,6 +85,10 @@ export default function Dashboard() {
       document.querySelector('body').removeAttribute('id');
       setShowModal(null);
     }
+  }
+
+  function handleChangeInfos() {
+    setLoading(true);
   }
 
   return (
@@ -168,8 +165,9 @@ export default function Dashboard() {
               {showModal && showModal === 'edit'
               && (
               <TaskModalEdit
-                closeModal={handleCloseModal}
+                handleCloseModal={handleCloseModal}
                 taskInfos={taskDetailedInfo}
+                onChangeInfos={handleChangeInfos}
               />
               )}
             </TasksContainer>

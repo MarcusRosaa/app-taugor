@@ -15,6 +15,22 @@ export const Layer = styled.div`
   overflow: hidden;
   animation: ${ModalEffect} 0.3s ease-in;
 
+  & ::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  /* Track */
+  & ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px #fafafa;
+    border-radius: 6px;
+  }
+
+  /* Handle */
+  & ::-webkit-scrollbar-thumb {
+    background: #0006;
+    border-radius: 10px;
+  }
+
 `;
 
 export const Container = styled.div`
@@ -47,6 +63,7 @@ export const Container = styled.div`
 
 export const Form = styled.form`
   border-radius: 8px;
+  height: max-content;
   width: 100%;
   padding-right: 16px;
   padding: 16px;
@@ -84,6 +101,10 @@ export const FormGroup = styled.div`
     font-size: 16px;
     font-weight: 500;
     margin-bottom: 10px;
+
+    ${({ error }) => error && css`
+      color: #ef2b2a;
+    `}
   }
 `;
 

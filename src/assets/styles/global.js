@@ -29,6 +29,10 @@ export default createGlobalStyle`
     cursor: pointer;
   }
 
+  a {
+    color: #1565c0 !important;
+  }
+
   a:visited{
     color: #1565c0 !important;
   }

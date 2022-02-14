@@ -24,9 +24,9 @@ export const Container = styled.div`
   padding: 16px;
   top: 50%;
   left:50%;
-  position:fixed;
-  overflow-y:scroll;
-  overflow-x:hidden;
+  position: fixed;
+  overflow-y: auto;
+  overflow-x: hidden;
   transform: translate(-50%, -50%);
   display: flex;
 
@@ -35,6 +35,23 @@ export const Container = styled.div`
   margin-bottom: 16px;
   background: #fff;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+
+
+  &::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  /* Track */
+  &::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px #fafafa;
+    border-radius: 6px;
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: #0006;
+    border-radius: 10px;
+  }
 
   @media (max-width: 1024px) {
     max-width: 800px;
@@ -130,6 +147,8 @@ export const SidebarItem = styled.div`
     p {
       font-size: 14px;
       font-weight: 300;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
   }
 
@@ -148,11 +167,8 @@ export const SidebarItem = styled.div`
     width: 60%;
     padding-left: 15px;
 
-    /* border: 1px solid orange; */
-
     a {
-      text-decoration: none;
-      color: #1565C0;
+      text-decoration: underline;
       display: flex;
       width: fit-content;
       text-align: center;

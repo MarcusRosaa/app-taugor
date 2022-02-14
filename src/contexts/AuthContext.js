@@ -23,8 +23,8 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
   const [loading, setLoading] = useState(true);
 
-  async function signup(email, password) {
-    await createUserWithEmailAndPassword(auth, email, password);
+  function signup(email, password) {
+    return createUserWithEmailAndPassword(auth, email, password);
   }
 
   function login(email, password) {
@@ -52,6 +52,7 @@ export function AuthProvider({ children }) {
       setCurrentUser(user);
       setLoading(false);
     });
+
     return unsubscribe;
   }, []);
 

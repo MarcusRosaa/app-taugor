@@ -8,6 +8,7 @@ export const Form = styled.form`
   justify-content: center;
   margin: 0 auto;
   padding: 0 8px;
+  padding-bottom: 32px;
 `;
 
 export const ButtonContainer = styled.div`

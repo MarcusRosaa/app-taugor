@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import { useRef, useState } from 'react';
-import { doc, updateDoc } from 'firebase/firestore';
+import {
+  doc, updateDoc,
+} from 'firebase/firestore';
 import {
   getDownloadURL, getStorage, ref, uploadBytes,
 } from 'firebase/storage';
@@ -11,7 +13,7 @@ import useErrors from '../../hooks/useErrors';
 import { useAuth } from '../../contexts/AuthContext';
 import { db } from '../../firebase';
 
-export default function TaskModalEdit({ closeModal, taskInfos }) {
+export default function TaskModalEdit({ handleCloseModal, taskInfos, onChangeInfos }) {
   const [titleInput, setTitleInput] = useState(taskInfos.title);
   const descriptionInput = useRef('');
   const productInput = useRef('');
@@ -50,6 +52,10 @@ export default function TaskModalEdit({ closeModal, taskInfos }) {
       problem_description: problemInput.current.value || '',
       impacted_users: impactedUsersInput.current.value || '',
     });
+
+    await onChangeInfos();
+
+    document.getElementById('editLayer').click(event);
   }
 
   async function handleIndexedDocumentChange(event) {
@@ -61,6 +67,8 @@ export default function TaskModalEdit({ closeModal, taskInfos }) {
 
       await uploadBytes(filesStorageRef, file);
       setIndexedDocumentInput(await getDownloadURL(filesStorageRef));
+    } else if (!file) {
+      setIndexedDocumentInput(taskInfos.file);
     }
   }
 
@@ -76,7 +84,7 @@ export default function TaskModalEdit({ closeModal, taskInfos }) {
   }
 
   return (
-    <Layer onClick={closeModal} className="modalLayer">
+    <Layer onClick={handleCloseModal} className="modalLayer" id="editLayer">
       <Container>
         <Form onSubmit={handleEdit} noValidate>
           <FormGroup error={getErrorMessageByFieldName('title')}>
@@ -102,6 +110,7 @@ export default function TaskModalEdit({ closeModal, taskInfos }) {
             <label htmlFor="problem">Descrição do problema</label>
             <Input
               name="problem"
+              ref={problemInput}
               defaultValue={taskInfos.problem_description}
             />
           </FormGroup>
@@ -110,6 +119,7 @@ export default function TaskModalEdit({ closeModal, taskInfos }) {
             <label htmlFor="product">Produto ou serviço afetado</label>
             <Input
               name="product"
+              ref={productInput}
               defaultValue={taskInfos.product}
             />
           </FormGroup>
@@ -118,7 +128,7 @@ export default function TaskModalEdit({ closeModal, taskInfos }) {
             <label htmlFor="priority">Prioridade</label>
             <Select
               name="priority"
-              ref={statusInput}
+              ref={priorityInput}
               defaultValue={taskInfos.priority}
             >
               <option value="">Prioridade</option>
@@ -146,7 +156,7 @@ export default function TaskModalEdit({ closeModal, taskInfos }) {
             <label htmlFor="impacted_users">Usuários impactados</label>
             <Select
               name="impacted_users"
-              ref={priorityInput}
+              ref={impactedUsersInput}
               defaultValue={taskInfos.impacted_users}
             >
               <option value="">Usuários impactados</option>
@@ -159,7 +169,7 @@ export default function TaskModalEdit({ closeModal, taskInfos }) {
           </FormGroup>
 
           <FormGroup>
-            <label htmlFor="files">Selecione um novo arquivo .txt ou .pdf</label>
+            <label htmlFor="files">Troque de arquivo</label>
             <Input
               type="file"
               accept=".txt, .pdf"
@@ -176,6 +186,7 @@ export default function TaskModalEdit({ closeModal, taskInfos }) {
 }
 
 TaskModalEdit.propTypes = {
-  closeModal: PropTypes.func.isRequired,
+  handleCloseModal: PropTypes.func.isRequired,
   taskInfos: PropTypes.objectOf(PropTypes.any).isRequired,
+  onChangeInfos: PropTypes.func.isRequired,
 };
