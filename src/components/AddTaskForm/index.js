@@ -146,7 +146,6 @@ export default function AddTaskForm() {
       <FormGroup>
         <Select
           ref={statusCategoryInput}
-          defaultValue="todo"
         >
           <option value="pendente">Pendente</option>
           <option value="em andamento">Em andamento</option>

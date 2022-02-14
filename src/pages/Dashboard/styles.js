@@ -4,6 +4,7 @@ export const Container = styled.div`
   position: relative;
   width: 100%;
   padding: 24px;
+  margin-top: 104px;
 `;
 
 export const TasksContainer = styled.div`

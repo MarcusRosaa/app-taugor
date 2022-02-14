@@ -7,6 +7,7 @@ export const Form = styled.form`
   flex-wrap: wrap;
   justify-content: center;
   margin: 0 auto;
+  margin-top: 56px;
   padding: 0 8px;
   padding-bottom: 32px;
 `;

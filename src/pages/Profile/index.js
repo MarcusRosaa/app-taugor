@@ -33,6 +33,7 @@ export default function Profile() {
           mt: '32px',
           display: 'flex',
           justifyContent: 'center',
+          marginTop: '136px',
         }}
       >
         <Card sx={{

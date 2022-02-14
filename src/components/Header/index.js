@@ -71,7 +71,7 @@ export default function Header({ page }) {
   }
 
   return (
-    <AppBar position="static">
+    <AppBar position="fixed" sx={{ zIndex: 999 }}>
       <Container maxWidth="xl">
         <Toolbar
           disableGutters

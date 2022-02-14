@@ -42,9 +42,10 @@ export default function TasksFilter({ onChangeOrderBy }) {
         <InputSelectContainer>
           <select name="cars" id="cars">
             <option value="all" defaultValue>Tarefas</option>
-            <option value="doing">Em andamento</option>
-            <option value="done">Finalizada</option>
-            <option value="todo">A fazer</option>
+            <option value="pendente">Pendente</option>
+            <option value="em andamento">Em andamento</option>
+            <option value="finalizada">Finalizada</option>
+            <option value="operação parada">Operação parada</option>
           </select>
         </InputSelectContainer>
 
